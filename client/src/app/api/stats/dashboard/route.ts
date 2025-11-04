@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pet, IPet } from '@/lib/models/Pet';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
-import dbConnect from '@/lib/config/db';
+import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
@@ -44,7 +44,7 @@ async function adminMiddleware(req: Request) {
 }
 
 export async function GET(req: Request) {
-    await dbConnect();
+    await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
         return adminError;

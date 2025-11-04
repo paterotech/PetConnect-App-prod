@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Donation } from '@/lib/models/Donation';
-import dbConnect from '@/lib/config/db';
+import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
@@ -20,7 +20,7 @@ function getTokenFromHeader(): string | null {
 }
 
 export async function GET() {
-  await dbConnect();
+  await connectDB();
 
   const token = getTokenFromHeader();
   if (!token) {

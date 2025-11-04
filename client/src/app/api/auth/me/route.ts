@@ -5,7 +5,7 @@ import { connectDB } from '@/lib/config/db';
 import { headers } from 'next/headers';
 
 async function getTokenFromHeader(): Promise<string | null> {
-  const authHeader = await headers().get('authorization');
+  const authHeader = (await headers()).get('authorization');
   if (!authHeader) {
     return null;
   }

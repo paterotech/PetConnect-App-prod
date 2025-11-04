@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
 import { AdopterFormSubmission } from '@/lib/models/AdopterFormSubmission';
-import dbConnect from '@/lib/config/db';
+import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
@@ -21,7 +21,7 @@ function getTokenFromHeader(): string | null {
 }
 
 export async function GET() {
-  await dbConnect();
+  await connectDB();
 
   const token = getTokenFromHeader();
   if (!token) {
@@ -59,9 +59,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  await dbConnect();
-
-  const token = getTokenFromHeader();
+  await connectDB();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
