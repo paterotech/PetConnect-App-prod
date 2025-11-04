@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { env } from '@/lib/config/env';
 import { Donation } from '@/lib/models/Donation';
-import dbConnect from '@/lib/config/db';
+import {connectDB} from '@/lib/config/db';
 
 export async function POST(req: Request) {
-  await dbConnect();
+  await connectDB();
 
   if (!env.STRIPE_SECRET) {
     return NextResponse.json({ message: 'Stripe no configurado' }, { status: 500 });
