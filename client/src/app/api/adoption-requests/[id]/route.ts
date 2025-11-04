@@ -43,7 +43,7 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
     await dbConnect();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -64,7 +64,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     await dbConnect();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -94,7 +94,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     await dbConnect();
     const adminError = await adminMiddleware(req);
     if (adminError) {
