@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { FollowUp } from '@/lib/models/FollowUp';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
-import dbConnect from '@/lib/config/db';
+import {connectDB} from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
 
-function getTokenFromHeader(): string | null {
-  const authHeader = headers().get('authorization');
+async function getTokenFromHeader(): Promise<string | null> {
+  const authHeader = (await headers()).get('authorization');
   if (!authHeader) {
     return null;
   }
@@ -44,7 +44,7 @@ async function adminMiddleware(req: Request) {
 }
 
 export async function GET(req: Request, { params }: { params: { petId: string } }) {
-    await dbConnect();
+    await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
         return adminError;
