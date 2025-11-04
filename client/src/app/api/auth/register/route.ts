@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { User } from '@/lib/models/User';
 import { signToken } from '@/lib/utils/jwt';
-import dbConnect from '@/lib/config/db';
+import {connectDB} from '@/lib/config/db';
 
 export async function POST(req: Request) {
-  await dbConnect();
+  await connectDB();
   const { name, email, password } = await req.json();
 
   if (!name || !email || !password) {
