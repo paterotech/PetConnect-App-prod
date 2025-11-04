@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
 import { Pet } from '@/lib/models/Pet';
-import dbConnect from '@/lib/config/db';
+import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
