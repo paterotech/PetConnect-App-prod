@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
 import { Pet } from '@/lib/models/Pet';
 import { connectDB } from '@/lib/config/db';
