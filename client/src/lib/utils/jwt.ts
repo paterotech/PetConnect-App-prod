@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { env } from '../config/env';
+import { env } from '@/lib/config/env';
 
 // Definimos un tipo para el payload del JWT para más seguridad y autocompletado
 export interface JwtPayload {
