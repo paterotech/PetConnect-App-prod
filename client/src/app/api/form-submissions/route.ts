@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { AdopterFormSubmission } from '@/lib/models/AdopterFormSubmission';
-import dbConnect from '@/lib/config/db';
+import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
