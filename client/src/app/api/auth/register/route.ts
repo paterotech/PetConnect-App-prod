@@ -19,15 +19,15 @@ export async function POST(req: Request) {
   const user = new User({ name, email, password });
   await user.save();
 
-  const token = signToken({ sub: user._id, email: user.email, role: user.role });
+  const token = signToken({ sub: (user as any)._id.toString(), email: (user as any).email, role: (user as any).role });
 
   return NextResponse.json({
     token,
     user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      id: (user as any)._id,
+      name: (user as any).name,
+      email: (user as any).email,
+      role: (user as any).role,
     },
   }, { status: 201 });
 }
