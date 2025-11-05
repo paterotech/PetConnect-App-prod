@@ -43,7 +43,7 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await dbConnect();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 
     try {
-        const request = await AdoptionRequest.findById(params.id)
+        const request = await AdoptionRequest.findById((await context.params).id)
             .populate('pet', 'name image')
             .populate('user', 'name email');
         if (!request) {
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await dbConnect();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -74,7 +74,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     try {
         const { status } = await req.json();
         const updatedRequest = await AdoptionRequest.findByIdAndUpdate(
-            params.id,
+            (await context.params).id,
             { status },
             { new: true }
         ).populate('pet');
@@ -94,7 +94,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await dbConnect();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -102,7 +102,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     try {
-        const deletedRequest = await AdoptionRequest.findByIdAndDelete(params.id);
+        const deletedRequest = await AdoptionRequest.findByIdAndDelete((await context.params).id);
         if (!deletedRequest) {
             return NextResponse.json({ message: 'Solicitud no encontrada.' }, { status: 404 });
         }
