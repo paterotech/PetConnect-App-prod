@@ -1,6 +1,8 @@
 import api from './api';
-import { IFollowUp } from '../lib/models/FollowUp';
-export { IFollowUp };
+import { FollowUp, IFollowUp as FollowUpModelInterface } from '../lib/models/FollowUp';
+
+export type IFollowUp = FollowUpModelInterface;
+
 
 // Define interfaces for the data expected from the API
 // These should ideally be shared types, but for now, we'll define them here or import from backend
