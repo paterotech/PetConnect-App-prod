@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { AdopterFormSubmission } from '@/lib/models/AdopterFormSubmission';
 import {connectDB} from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
@@ -42,7 +42,7 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -50,7 +50,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 
     try {
-        const submission = await AdopterFormSubmission.findById(params.id)
+        const submission = await AdopterFormSubmission.findById((await context.params).id)
             .populate('user', 'name email');
         if (!submission) {
             return NextResponse.json({ message: 'Entrada de formulario no encontrada' }, { status: 404 });
@@ -62,7 +62,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -72,7 +72,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     try {
         const { status } = await req.json();
         const updatedSubmission = await AdopterFormSubmission.findByIdAndUpdate(
-            params.id,
+            (await context.params).id,
             { status },
             { new: true }
         );
@@ -86,7 +86,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -94,7 +94,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     }
 
     try {
-        const deletedSubmission = await AdopterFormSubmission.findByIdAndDelete(params.id);
+        const deletedSubmission = await AdopterFormSubmission.findByIdAndDelete((await context.params).id);
         if (!deletedSubmission) {
             return NextResponse.json({ message: 'Entrada de formulario no encontrada' }, { status: 404 });
         }
