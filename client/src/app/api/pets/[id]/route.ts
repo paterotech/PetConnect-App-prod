@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { Pet } from '@/lib/models/Pet';
 import {connectDB} from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
@@ -20,16 +20,16 @@ async function getTokenFromHeader(): Promise<string | null> {
   return token;
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
-  const pet = await Pet.findById(params.id);
+  const pet = await Pet.findById((await context.params).id);
   if (!pet) {
     return NextResponse.json({ message: 'Mascota no encontrada.' }, { status: 404 });
   }
   return NextResponse.json({ item: pet });
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
   const token = getTokenFromHeader();
@@ -52,7 +52,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     const body = await req.json();
     const { status } = body;
 
-    const pet = await Pet.findByIdAndUpdate(params.id, body, { new: true });
+    const pet = await Pet.findByIdAndUpdate((await context.params).id, body, { new: true });
     if (!pet) {
       return NextResponse.json({ message: 'Mascota no encontrada.' }, { status: 404 });
     }
@@ -68,7 +68,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
   const token = getTokenFromHeader();
@@ -88,7 +88,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
-    await Pet.findByIdAndDelete(params.id);
+    await Pet.findByIdAndDelete((await context.params).id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     return NextResponse.json({ message: 'Token inválido o expirado.' }, { status: 401 });
