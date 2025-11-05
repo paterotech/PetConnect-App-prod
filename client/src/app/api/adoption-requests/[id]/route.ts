@@ -44,7 +44,7 @@ async function adminMiddleware(req: Request) {
 }
 
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
-    await dbConnect();
+    await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
         return adminError;
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 }
 
 export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
-    await dbConnect();
+    await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
         return adminError;
@@ -95,7 +95,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
 }
 
 export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
-    await dbConnect();
+    await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
         return adminError;
