@@ -41,7 +41,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-100 text-gray-600 body-font">
+    <footer className="bg-[#E3E8E8] text-gray-700 body-font">
       <div className="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
         {/* Logo and Copyright */}
         <Link href="/home" className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
