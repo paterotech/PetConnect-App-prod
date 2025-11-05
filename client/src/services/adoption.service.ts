@@ -20,13 +20,19 @@ export const getMyAdoptionRequests = async () => {
   return res.data;
 };
 
+interface CreateAdoptionRequestData {
+  pet: string; // This is the petId
+  contactEmail: string;
+  contactPhone: string;
+  message: string;
+}
+
 // Create a new adoption request
-export const createAdoptionRequest = async (petId: string, message: string) => {
-    const token = localStorage.getItem("token");
+export const createAdoptionRequest = async (data: CreateAdoptionRequestData, token: string) => {
     if (!token) {
         throw new Error("No token found");
     }
-    const res = await api.post("/adoption-requests", { petId, message }, {
+    const res = await api.post("/adoption-requests", data, {
         headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
