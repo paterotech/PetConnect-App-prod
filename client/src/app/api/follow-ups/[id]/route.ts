@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { FollowUp, IFollowUp } from '@/lib/models/FollowUp';
 import {connectDB} from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
@@ -42,7 +42,7 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -50,7 +50,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 
     try {
-        const followUp = await FollowUp.findById(params.id).populate({
+        const followUp = await FollowUp.findById((await context.params).id).populate({
             path: 'adoptionRequest',
             populate: {
                 path: 'pet'
@@ -66,7 +66,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -85,7 +85,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         if (visitDate) fieldsToUpdate.visitDate = visitDate;
 
         const followUp = await FollowUp.findByIdAndUpdate(
-            params.id,
+            (await context.params).id,
             { $set: fieldsToUpdate },
             { new: true }
         );
@@ -101,7 +101,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -109,12 +109,12 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     }
 
     try {
-        const followUp = await FollowUp.findById(params.id);
+        const followUp = await FollowUp.findById((await context.params).id);
         if (!followUp) {
             return NextResponse.json({ msg: 'Seguimiento no encontrado' }, { status: 404 });
         }
 
-        await FollowUp.findByIdAndDelete(params.id);
+        await FollowUp.findByIdAndDelete((await context.params).id);
 
         return NextResponse.json({ msg: 'Seguimiento eliminado' });
     } catch (err) {
