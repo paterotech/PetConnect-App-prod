@@ -20,7 +20,7 @@ async function getTokenFromHeader(): Promise<string | null> {
 }
 
 async function adminMiddleware(req: Request) {
-    const token = getTokenFromHeader();
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
@@ -44,7 +44,7 @@ async function adminMiddleware(req: Request) {
 
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }
@@ -68,13 +68,13 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 
 export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }
 
     try {
-        const { mood, health, weight, notes, status, visitDate } = await req.json();
+        const { mood, health, weight, notes, status, visitDate } = await request.json();
         
         const fieldsToUpdate: Partial<IFollowUp> = {};
         if (mood) fieldsToUpdate.mood = mood;
@@ -103,7 +103,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
 
 export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }

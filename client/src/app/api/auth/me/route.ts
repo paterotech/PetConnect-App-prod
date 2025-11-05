@@ -20,7 +20,7 @@ async function getTokenFromHeader(): Promise<string | null> {
 
 export async function GET() {
   await connectDB();
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
 
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });

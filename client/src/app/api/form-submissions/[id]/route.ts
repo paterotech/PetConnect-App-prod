@@ -19,8 +19,8 @@ async function getTokenFromHeader(): Promise<string | null> {
   return token;
 }
 
-async function adminMiddleware(req: Request) {
-    const token = getTokenFromHeader();
+async function adminMiddleware(request: NextRequest) {
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
@@ -44,7 +44,7 @@ async function adminMiddleware(req: Request) {
 
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }
@@ -64,13 +64,13 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 
 export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }
 
     try {
-        const { status } = await req.json();
+        const { status } = await request.json();
         const updatedSubmission = await AdopterFormSubmission.findByIdAndUpdate(
             (await context.params).id,
             { status },
@@ -88,7 +88,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
 
 export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }

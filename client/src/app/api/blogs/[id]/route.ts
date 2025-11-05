@@ -22,7 +22,7 @@ async function getTokenFromHeader(): Promise<string | null> {
 export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
@@ -39,7 +39,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
-    const body = await req.json();
+    const body = await request.json();
     const blog = await Blog.findByIdAndUpdate((await context.params).id, body, { new: true });
     if (!blog) {
       return NextResponse.json({ message: 'Campaña no encontrada.' }, { status: 404 });
@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
 export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }

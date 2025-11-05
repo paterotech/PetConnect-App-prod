@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { FollowUp } from '@/lib/models/FollowUp';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
 import {connectDB} from '@/lib/config/db';
@@ -20,8 +20,8 @@ async function getTokenFromHeader(): Promise<string | null> {
   return token;
 }
 
-async function adminMiddleware(req: Request) {
-    const token = getTokenFromHeader();
+async function adminMiddleware(request: NextRequest) {
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
@@ -43,15 +43,15 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }
 
     try {
-        const { petId } = await req.json();
+        const { petId } = await request.json();
         const adoptionRequest = await AdoptionRequest.findOne({ pet: petId, status: 'aprobada' });
         if (!adoptionRequest) {
             return NextResponse.json({ msg: 'No se encontró solicitud de adopción aprobada.' }, { status: 404 });

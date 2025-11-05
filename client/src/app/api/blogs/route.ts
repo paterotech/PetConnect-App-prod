@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { Blog } from '@/lib/models/Blog';
 import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
 
-function getTokenFromHeader(): string | null {
-  const authHeader = headers().get('authorization');
+async function getTokenFromHeader(): Promise<string | null> {
+  const authHeader = (await headers()).get('authorization');
   if (!authHeader) {
     return null;
   }
@@ -25,10 +25,10 @@ export async function GET() {
   return NextResponse.json({ items: blogs });
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   await connectDB();
 
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
-    const body = await req.json();
+    const body = await request.json();
     const blog = await Blog.create(body);
     return NextResponse.json({ item: blog }, { status: 201 });
   } catch (error) {

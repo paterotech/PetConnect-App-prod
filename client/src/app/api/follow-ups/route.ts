@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { FollowUp } from '@/lib/models/FollowUp';
 import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
 
-function getTokenFromHeader(): string | null {
-  const authHeader = headers().get('authorization');
+async function getTokenFromHeader(): Promise<string | null> {
+  const authHeader = (await headers()).get('authorization');
   if (!authHeader) {
     return null;
   }
@@ -19,8 +19,8 @@ function getTokenFromHeader(): string | null {
   return token;
 }
 
-async function adminMiddleware(req: Request) {
-    const token = getTokenFromHeader();
+async function adminMiddleware(request: NextRequest) {
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
@@ -42,9 +42,9 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }
