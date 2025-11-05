@@ -45,8 +45,8 @@ export default function Footer() {
       <div className="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
         {/* Logo and Copyright */}
         <Link href="/home" className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-          <Image src="/Logo.png" alt="PetConnect logo" width={40} height={40} />
-          <span className="ml-3 text-xl">PetConnect Colombia</span>
+          <Image src="/Logo.png" alt="PetConnect logo" width={80} height={80} />
+          <span className="ml-3 text-xl font-bold tracking-wide px-3 py-1 bg-green-100/50 text-green-800 rounded-full">Colombia</span>
         </Link>
         <p className="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">
           © 2025 PetConnect —

@@ -54,8 +54,8 @@ export default function Navbar() {
             <span className="text-lg md:text-xl font-semibold text-[#3DD9D6]">
               {/* PetConnect */}
             </span>
-            <span className="text-xs text-gray-600 tracking-wide">
-              {/* COLOMBIA */}
+            <span className="text-xs font-bold tracking-wide px-3 py-1 bg-green-100/50 text-green-800 rounded-full">
+              COLOMBIA
             </span>
           </div>
         </Link>
