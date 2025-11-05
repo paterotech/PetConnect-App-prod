@@ -32,13 +32,13 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
 export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
 
   try {
-    const payload = verifyToken(token) as JwtPayload;
+    const payload = verifyToken(token as string) as JwtPayload;
     const user = await User.findById(payload.sub);
 
     if (!user) {
@@ -49,7 +49,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
-    const body = await req.json();
+    const body = await request.json();
     const { status } = body;
 
     const pet = await Pet.findByIdAndUpdate((await context.params).id, body, { new: true });
@@ -71,13 +71,13 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
 export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
 
   try {
-    const payload = verifyToken(token) as JwtPayload;
+    const payload = verifyToken(token as string) as JwtPayload;
     const user = await User.findById(payload.sub);
 
     if (!user) {

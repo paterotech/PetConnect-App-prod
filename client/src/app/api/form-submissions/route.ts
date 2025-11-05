@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { AdopterFormSubmission } from '@/lib/models/AdopterFormSubmission';
 import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
@@ -19,8 +19,8 @@ async function getTokenFromHeader(): Promise<string | null> {
   return token;
 }
 
-async function adminMiddleware(req: Request) {
-    const token = getTokenFromHeader();
+async function adminMiddleware(request: NextRequest) {
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
@@ -42,9 +42,9 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function POST(req: Request) {
-    await dbConnect();
-    const token = getTokenFromHeader();
+export async function POST(request: NextRequest) {
+    await connectDB();
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         const {
             fullName, email, phone, housingType, hasOtherPets, hasChildren,
             livesWithAdults, ageRange, department, city, petPreference, reasonForAdoption
-        } = await req.json();
+        } = await request.json();
 
         const newSubmission = await AdopterFormSubmission.create({
             fullName, email, phone, housingType, hasOtherPets, hasChildren,
@@ -71,9 +71,9 @@ export async function POST(req: Request) {
     }
 }
 
-export async function GET(req: Request) {
-    await dbConnect();
-    const adminError = await adminMiddleware(req);
+export async function GET(request: NextRequest) {
+    await connectDB();
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }

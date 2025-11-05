@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { Pet, IPet } from '@/lib/models/Pet';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
 import { connectDB } from '@/lib/config/db';
@@ -20,14 +20,14 @@ async function getTokenFromHeader(): Promise<string | null> {
   return token;
 }
 
-async function adminMiddleware(req: Request) {
-    const token = getTokenFromHeader();
+async function adminMiddleware(request: NextRequest) {
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
 
     try {
-        const payload = verifyToken(token) as JwtPayload;
+        const payload = verifyToken(token as string) as JwtPayload;
         const user = await User.findById(payload.sub);
 
         if (!user) {
@@ -43,9 +43,9 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
     await connectDB();
-    const adminError = await adminMiddleware(req);
+    const adminError = await adminMiddleware(request);
     if (adminError) {
         return adminError;
     }

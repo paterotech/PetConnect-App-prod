@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { Pet } from '@/lib/models/Pet';
 import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
@@ -25,16 +25,16 @@ export async function GET() {
   return NextResponse.json({ items: pets });
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   await connectDB();
 
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
 
   try {
-    const payload = verifyToken(token) as JwtPayload;
+    const payload = verifyToken(token as string) as JwtPayload;
     const user = await User.findById(payload.sub);
 
     if (!user) {
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
-    const body = await req.json();
+    const body = await request.json();
     const pet = await Pet.create(body);
     return NextResponse.json({ item: pet }, { status: 201 });
   } catch (error) {
