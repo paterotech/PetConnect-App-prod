@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { User } from '@/lib/models/User';
+import { User, IUser } from '@/lib/models/User';
 import { signToken } from '@/lib/utils/jwt';
 import { connectDB } from '@/lib/config/db';
 
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'El email y la contraseña son requeridos.' }, { status: 400 });
   }
 
-  const user = await User.findOne({ email }).select('+password');
+  const user: IUser | null = await User.findOne({ email }).select('+password');
   if (!user) {
     return NextResponse.json({ message: 'Credenciales inválidas.' }, { status: 401 });
   }
