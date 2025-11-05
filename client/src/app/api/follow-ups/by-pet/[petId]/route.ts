@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { FollowUp } from '@/lib/models/FollowUp';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
 import {connectDB} from '@/lib/config/db';
@@ -43,7 +43,7 @@ async function adminMiddleware(req: Request) {
     }
 }
 
-export async function GET(req: Request, { params }: { params: { petId: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ petId: string }> }) {
     await connectDB();
     const adminError = await adminMiddleware(req);
     if (adminError) {
@@ -51,7 +51,7 @@ export async function GET(req: Request, { params }: { params: { petId: string } 
     }
 
     try {
-        const adoptionRequest = await AdoptionRequest.findOne({ pet: params.petId, status: 'aprobada' });
+        const adoptionRequest = await AdoptionRequest.findOne({ pet: (await context.params).petId, status: 'aprobada' });
         if (!adoptionRequest) {
             return NextResponse.json([]);
         }
