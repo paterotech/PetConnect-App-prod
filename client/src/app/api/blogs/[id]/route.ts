@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { Blog } from '@/lib/models/Blog';
 import {connectDB} from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
@@ -19,7 +19,7 @@ async function getTokenFromHeader(): Promise<string | null> {
   return token;
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
   const token = getTokenFromHeader();
@@ -40,7 +40,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 
     const body = await req.json();
-    const blog = await Blog.findByIdAndUpdate(params.id, body, { new: true });
+    const blog = await Blog.findByIdAndUpdate((await context.params).id, body, { new: true });
     if (!blog) {
       return NextResponse.json({ message: 'Campaña no encontrada.' }, { status: 404 });
     }
@@ -50,7 +50,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   await connectDB();
 
   const token = getTokenFromHeader();
@@ -70,7 +70,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
-    await Blog.findByIdAndDelete(params.id);
+    await Blog.findByIdAndDelete((await context.params).id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     return NextResponse.json({ message: 'Token inválido o expirado.' }, { status: 401 });
