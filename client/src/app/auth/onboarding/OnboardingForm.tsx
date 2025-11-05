@@ -144,7 +144,7 @@ export default function OnboardingForm() {
           <textarea name="reasonForAdoption" id="reasonForAdoption" value={formData.reasonForAdoption} onChange={handleChange} required rows={4} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-gray-900"></textarea>
         </div>
         <div>
-          <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-bold text-white bg-[#FFD93D] hover:bg-[#ffe066] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FFD93D] text-[#2D2D2D]">
+          <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-bold text-white bg-[#FFD93D] hover:bg-[#ffe066] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FFD93D]">
             Enviar Solicitud
           </button>
         </div>
