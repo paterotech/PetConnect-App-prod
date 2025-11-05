@@ -21,7 +21,7 @@ async function getTokenFromHeader(): Promise<string | null> {
 }
 
 async function adminMiddleware(req: Request) {
-    const token = getTokenFromHeader();
+    const token = await getTokenFromHeader();
     if (!token) {
         return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
     }
