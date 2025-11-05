@@ -4,7 +4,7 @@ import { CheckCircle, XCircle } from 'lucide-react';
 import { useAuth } from '@/app/context/AuthContext';
 import { useSearchParams } from 'next/navigation';
 import { confirmPayment } from '@/services/donations.service';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // This is the new client component that contains the original logic
 const SuccessPageContent = () => {
