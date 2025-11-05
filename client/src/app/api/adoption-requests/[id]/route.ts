@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { AdoptionRequest } from '@/lib/models/AdoptionRequest';
-import { Pet } from '@/lib/models/Pet';
+import { Pet, IPet } from '@/lib/models/Pet';
 import { connectDB } from '@/lib/config/db';
 import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
@@ -84,7 +84,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
         }
 
         if (status === 'aprobada') {
-            await Pet.findByIdAndUpdate(updatedRequest.pet._id, { status: 'adoptado' });
+            await Pet.findByIdAndUpdate((updatedRequest.pet as IPet)._id, { status: 'adoptado' });
         }
 
         return NextResponse.json({ item: updatedRequest });
