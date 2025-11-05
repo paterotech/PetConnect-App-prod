@@ -6,7 +6,7 @@ import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
 
-function getTokenFromHeader(): string | null {
+async function getTokenFromHeader(): Promise<string | null> {
   const authHeader = (await headers()).get('authorization');
   if (!authHeader) {
     return null;
