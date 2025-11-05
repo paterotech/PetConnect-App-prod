@@ -6,8 +6,8 @@ import { verifyToken, JwtPayload } from '@/lib/utils/jwt';
 import { headers } from 'next/headers';
 import { User } from '@/lib/models/User';
 
-function getTokenFromHeader(): string | null {
-  const authHeader = headers().get('authorization');
+async function getTokenFromHeader(): Promise<string | null> {
+  const authHeader = (await headers()).get('authorization');
   if (!authHeader) {
     return null;
   }
@@ -23,7 +23,7 @@ function getTokenFromHeader(): string | null {
 export async function GET() {
   await connectDB();
 
-  const token = getTokenFromHeader();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
@@ -60,6 +60,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   await connectDB();
+  const token = await getTokenFromHeader();
   if (!token) {
     return NextResponse.json({ message: 'No autenticado. Se requiere token.' }, { status: 401 });
   }
