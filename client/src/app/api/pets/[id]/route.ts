@@ -45,7 +45,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
       return NextResponse.json({ message: 'Usuario no encontrado.' }, { status: 404 });
     }
 
-    if (user.role !== 'admin') {
+    if ((user as any).role !== 'admin') {
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
@@ -58,7 +58,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
     }
 
     if (status === 'en seguimiento') {
-      await startFollowUpProcessForPet(pet._id.toString());
+      await startFollowUpProcessForPet((pet as any)._id.toString());
     }
 
     return NextResponse.json({ item: pet });
@@ -84,7 +84,7 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
       return NextResponse.json({ message: 'Usuario no encontrado.' }, { status: 404 });
     }
 
-    if (user.role !== 'admin') {
+    if ((user as any).role !== 'admin') {
       return NextResponse.json({ message: 'Acceso denegado. Se requiere rol de administrador.' }, { status: 403 });
     }
 
