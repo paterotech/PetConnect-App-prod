@@ -1,7 +1,4 @@
-import dotenv from 'dotenv';
-import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '..', '.env') }); // Carga las variables de entorno desde el archivo .env
 
 /**
  * Objeto que contiene las variables de entorno de la aplicación.
