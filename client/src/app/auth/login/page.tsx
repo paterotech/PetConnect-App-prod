@@ -39,7 +39,7 @@ export default function LoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e0f7fa] to-[#f8fafc]">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-2 p-8 bg-white/90 rounded-2xl shadow-2xl max-w-md w-full mx-4 animate-fade-in px-4 py-8 pt-32"
+        className="flex flex-col gap-2 p-8 bg-white/90 rounded-2xl shadow-2xl max-w-md w-full animate-fade-in mx-auto px-4 py-8 pt-32"
         aria-label="Formulario de inicio de sesión"
       >
         <div className="flex justify-center mb-2">
