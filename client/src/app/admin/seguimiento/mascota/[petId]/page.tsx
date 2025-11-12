@@ -87,7 +87,7 @@ const DetalleSeguimientoPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
+      <div className="mb-6 pt-32">
         <Link
           href="/home/administrador?tab=seguimientos" // Corrected to navigate to admin dashboard with 'seguimientos' tab pre-selected
           className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold"

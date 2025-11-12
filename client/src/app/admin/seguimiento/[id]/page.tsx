@@ -77,7 +77,7 @@ const SeguimientoFormPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 ">
+    <div className="container mx-auto px-4 py-8">
       <div className="mb-6 pt-32">
         <button
           onClick={() => router.push(petId ? `/admin/seguimiento/mascota/${petId}` : '/home/administrador')}
